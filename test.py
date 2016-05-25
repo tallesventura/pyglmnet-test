@@ -1,4 +1,3 @@
-import csv
 import pandas as pd
 import numpy as np
 import scipy.sparse as sps
@@ -6,23 +5,36 @@ import matplotlib.pyplot as plt
 from sklearn.cross_validation import train_test_split
 from sklearn.preprocessing import StandardScaler
 from pyglmnet import GLM
-from sklearn.datasets import make_classification
+
+
+#file: 			the name of the file
+#header_index: 	the index of the row which contains the names of the features
+def read_dataset(file,header_index):
+	return pd.read_csv(file,header=header_index)
+
+
+#dataframe:				the variable that contains the dataset
+#label_column_index:	the index of the column that contain the labels (values of y)
+def build_Xy(dataframe,label_column_index):
+	return np.array(df.drop(['quality'],axis=1)), np.array(df['quality'].astype(int))
 
 
 # reading the dataset
-df = pd.read_csv('winequalityred.csv',header=0)
+df = read_dataset('winequalityred.csv',0)
 
+# separating the dependent variables from the independent variables
+X, y = build_Xy(df,'quality')
 
-y = np.array(df['quality'].astype(int))
-X = np.array(df.drop(['quality'],axis=1))
+n_features = X.shape[1]
+n_samples = X.shape[0]
 
 
 #Splitting the training and test sets
 X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.33,random_state=0)
 
 # Defining the model
-model = GLM(distr='multinomial', alpha=0.01,
-               reg_lambda=np.array([0.02, 0.01]), learning_rate=3e-3 ,verbose=False,)
+model = GLM(distr='multinomial', alpha=0.5,
+               reg_lambda=np.array([0.02, 0.01]), learning_rate=1e-3 ,verbose=False,)
 
 
 #initial values for the coefficients
