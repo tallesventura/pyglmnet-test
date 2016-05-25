@@ -30,9 +30,6 @@ X, y = build_Xy(df,'quality')
 n_features = X.shape[1]
 n_samples = X.shape[0]
 
-#y = np.array(df['quality'].astype(int))
-#X = np.array(df.drop(['quality'],axis=1))
-
 
 #Splitting the training and test sets
 X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.33,random_state=0)
