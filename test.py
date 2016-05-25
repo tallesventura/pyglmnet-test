@@ -16,29 +16,13 @@ df = pd.read_csv('winequalityred.csv',header=0)
 y = np.array(df['quality'].astype(int))
 X = np.array(df.drop(['quality'],axis=1))
 
-print X.shape
-print y.shape
-
- 
-n_features = X.shape[1]
-n_samples = X.shape[0]
-print 'n_features: ',n_features
-print 'n_samples: ',n_samples
-
 
 #Splitting the training and test sets
 X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.33,random_state=0)
 
-
-"""
-#creating the model
-reg_lambda = np.logspace(np.log(0.5), np.log(0.01), 10, base=np.exp(1))
-model = GLM(distr='multinomial', verbose=False, alpha=0.05,
-            max_iter=1000, learning_rate=1e-4,
-            reg_lambda=reg_lambda)
-"""
-model = GLM(distr='multinomial', alpha=0.5,
-               reg_lambda=np.array([0.02, 0.01]), learning_rate=1e-4 ,verbose=False,)
+# Defining the model
+model = GLM(distr='multinomial', alpha=0.01,
+               reg_lambda=np.array([0.02, 0.01]), learning_rate=3e-3 ,verbose=False,)
 
 
 #initial values for the coefficients
@@ -67,12 +51,13 @@ plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=1,
            ncol=2, borderaxespad=0.)
 plt.show()
 
-
+# Makin the predictions base on fit model
 yt_predicted = model[-1].predict(X_test)
 yr_predicted = model[-1].predict(X_train)
 y_test_predicted = yt_predicted.argmax(axis=1)
 y_train_predicted = yr_predicted.argmax(axis=1)
 
+# Can we use this??
 print('Output performance = %f percent.' % (y_test_predicted == y_test).mean())
 
 
