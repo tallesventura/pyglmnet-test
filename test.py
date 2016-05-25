@@ -1,4 +1,3 @@
-import csv
 import pandas as pd
 import numpy as np
 import scipy.sparse as sps
@@ -6,7 +5,6 @@ import matplotlib.pyplot as plt
 from sklearn.cross_validation import train_test_split
 from sklearn.preprocessing import StandardScaler
 from pyglmnet import GLM
-from sklearn.datasets import make_classification
 
 
 #file: 			the name of the file
