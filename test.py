@@ -9,9 +9,14 @@ from pyglmnet import GLM
 from sklearn.datasets import make_classification
 
 
+#file: 			the name of the file
+#header_index: 	the index of the row which contains the names of the features
 def read_dataset(file,header_index):
 	return pd.read_csv(file,header=header_index)
 
+
+#dataframe:				the variable that contains the dataset
+#label_column_index:	the index of the column that contain the labels (values of y)
 def build_Xy(dataframe,label_column_index):
 	return np.array(df.drop(['quality'],axis=1)), np.array(df['quality'].astype(int))
 
