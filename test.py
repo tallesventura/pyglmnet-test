@@ -9,25 +9,26 @@ from pyglmnet import GLM
 from sklearn.datasets import make_classification
 
 
+# reading the dataset
 df = pd.read_csv('winequalityred.csv',header=0)
-ndarray_data = np.array(df)
 
 
-X = ndarray_data[1:,:ndarray_data.shape[1]-1]
-y = ndarray_data[1:,ndarray_data.shape[1]-1]
+y = np.array(df['quality'].astype(int))
+X = np.array(df.drop(['quality'],axis=1))
 
+print X.shape
+print y.shape
+
+ 
 n_features = X.shape[1]
 n_samples = X.shape[0]
 print 'n_features: ',n_features
 print 'n_samples: ',n_samples
 
-X, y = make_classification(n_samples=X.shape[0], n_classes=10,
-                           n_informative=n_features, n_features=n_features, n_redundant=0)
-
 
 #Splitting the training and test sets
 X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.33,random_state=0)
-#print 'true X ',X_test.shape
+
 
 """
 #creating the model
@@ -36,8 +37,8 @@ model = GLM(distr='multinomial', verbose=False, alpha=0.05,
             max_iter=1000, learning_rate=1e-4,
             reg_lambda=reg_lambda)
 """
-model = GLM(distr='multinomial', alpha=0.01,
-               reg_lambda=np.array([0.02, 0.01]), verbose=False,)
+model = GLM(distr='multinomial', alpha=0.5,
+               reg_lambda=np.array([0.02, 0.01]), learning_rate=1e-4 ,verbose=False,)
 
 
 #initial values for the coefficients
@@ -47,13 +48,12 @@ beta = np.array(beta.todense())
 
 
 model.threshold = 1e-5
+
 #scaler = StandardScaler().fit(X_train)
 #model.fit(scaler.transform(X_train),y_train)
 
-
 # Fitting the model
 model.fit(X_train,y_train)
-#print 'reg_lambda: ',model.reg_lambda
 
 
 #ploting the fit coefficients
@@ -68,26 +68,17 @@ plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=1,
 plt.show()
 
 
-yt_predicted = model[0].predict(X_test)
-yr_predicted = model[0].predict(X_train)
+yt_predicted = model[-1].predict(X_test)
+yr_predicted = model[-1].predict(X_train)
 y_test_predicted = yt_predicted.argmax(axis=1)
 y_train_predicted = yr_predicted.argmax(axis=1)
 
-##y_test_predicted = model[0].predict(X_test).argmax(axis=1)
-##y_train_predicted = model[0].predict(X_train).argmax(axis=1)
-#print 'true y ',y_test.shape
-#print 'fit_: ',model[0].fit_['beta'].shape
-#print 'predicted y ',y_test_predicted.shape
-
-
-#predicting values
-#y_test_predicted = model[0].predict(scaler.transform(X_test))
-#y_train_predicted = model[0].predict(scaler.transform(X_train))
+print('Output performance = %f percent.' % (y_test_predicted == y_test).mean())
 
 
 #plotting the predictions
-plt.plot(y_test[:100], label='tr')
-plt.plot(y_test_predicted[:100], 'r', label='pr')
+plt.plot(y_test[:500], label='tr')
+plt.plot(y_test_predicted[:500], 'r', label='pr')
 plt.xlabel('samples')
 plt.ylabel('true and predicted outputs')
 plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=1,
@@ -95,6 +86,7 @@ plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=1,
 plt.show()
 
 
+"""
 # Compute model deviance
 Dr = model[0].score(y_train, yr_predicted)
 Dt = model[0].score(y_test, yt_predicted)
@@ -105,7 +97,7 @@ print('Dr = %f' % Dr, 'Dt = %f' % Dt)
 R2r = model[0].score(y_train, yr_predicted, np.mean(y_train), method='pseudo_R2')
 R2t = model[0].score(y_test, yt_predicted, np.mean(y_train), method='pseudo_R2')
 print('  R2r =  %f' % R2r, ' R2r = %f' % R2t)
-
+"""
 
 
 
