@@ -1,3 +1,13 @@
+"""
+==============================
+Communities and Crime
+==============================
+
+This is a real life example demonstrating how pyglmnet with
+poisson exponential distribution works.
+
+"""
+
 import pandas as pd
 import numpy as np
 import scipy.sparse as sps
@@ -37,11 +47,11 @@ X_train, X_test, y_train, y_test = train_test_split(X,y,train_size=0.5,random_st
 # Defining the model
 model = GLM(distr='poisson', verbose=False, alpha=0.052, learning_rate=1e-3)
 # Best values for the parameters for R2s:
-# R2r:	0.714862							
+# R2r:	0.714862
 # 	alpha: 			0.052
 # 	learning rate: 	1e-3
 # R2t:	0.674098
-#	alpha:			0.052		
+#	alpha:			0.052
 #	learning rate:	1e-3
 
 print 'alpha: ', model.alpha
@@ -90,7 +100,3 @@ print('Dr = %f' % Dr, 'Dt = %f' % Dt)
 R2r = model[-1].score(y_train, yr_predicted, np.mean(y_train), method='pseudo_R2')
 R2t = model[-1].score(y_test, yt_predicted, np.mean(y_train), method='pseudo_R2')
 print('  R2r =  %f' % R2r, ' R2t = %f' % R2t)
-
-
-
-
