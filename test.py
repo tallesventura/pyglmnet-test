@@ -35,8 +35,14 @@ n_samples = X.shape[0]
 X_train, X_test, y_train, y_test = train_test_split(X,y,train_size=0.5,random_state=0)
 
 # Defining the model
-reg_lambda = np.logspace(np.log(0.5), np.log(0.01), 10, base=np.exp(1))
-model = GLM(distr='poisson', verbose=False, alpha=0.01, learning_rate=1e-4, reg_lambda = reg_lambda)
+model = GLM(distr='poisson', verbose=False, alpha=0.052, learning_rate=1e-3)
+# Best values for the parameters for R2s:
+# R2r:	0.714862							
+# 	alpha: 			0.052
+# 	learning rate: 	1e-3
+# R2t:	0.674098
+#	alpha:			0.052		
+#	learning rate:	1e-3
 
 print 'alpha: ', model.alpha
 print 'learning rate: ', model.learning_rate
@@ -75,15 +81,15 @@ plt.show()
 
 
 # Compute model deviance
-Dr = model[0].score(y_train, yr_predicted)
-Dt = model[0].score(y_test, yt_predicted)
+Dr = model[-1].score(y_train, yr_predicted)
+Dt = model[-1].score(y_test, yt_predicted)
 print('Dr = %f' % Dr, 'Dt = %f' % Dt)
 
 
 # Compute pseudo-R2s
-R2r = model[0].score(y_train, yr_predicted, np.mean(y_train), method='pseudo_R2')
-R2t = model[0].score(y_test, yt_predicted, np.mean(y_train), method='pseudo_R2')
-print('  R2r =  %f' % R2r, ' R2r = %f' % R2t)
+R2r = model[-1].score(y_train, yr_predicted, np.mean(y_train), method='pseudo_R2')
+R2t = model[-1].score(y_test, yt_predicted, np.mean(y_train), method='pseudo_R2')
+print('  R2r =  %f' % R2r, ' R2t = %f' % R2t)
 
 
 
