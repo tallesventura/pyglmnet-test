@@ -48,7 +48,7 @@ glm = GLM(distr='poisson', alpha=alpha, reg_lambda=reg_lambda, learning_rate=l_r
 #plotting the predictions
 plt.plot(y_test, label='tr')
 plt.plot(y_pred_enet, 'r', label='sklearn-pr')
-plt.plot(y_pred_pyglm, 'r', label='pyglmnet-pr')
+# Add the result for GLM
 plt.xlabel('')
 plt.ylabel('')
 plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=1,
