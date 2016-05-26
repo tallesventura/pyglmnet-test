@@ -16,7 +16,7 @@ n_samples, n_features = X.shape
 
 X, y = np.array(ds.drop(['att128'],axis=1)), np.array(ds['att128'])
 
-X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.33,random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.25,random_state=0)
 
 ########################################################
 # Work with scikit
@@ -37,8 +37,18 @@ print("r^2 on test data using sklearn : %f" % r2_score_enet)
 
 from pyglmnet import GLM
 
-reg_lambda = np.logspace(np.log(0.5), np.log(0.01), 10, base=np.exp(1))
-glm = GLM(distr='poisson', alpha=alpha, reg_lambda=reg_lambda, learning_rate=l_ratio ,verbose=False)
+# Think about this variable
+# reg_lambda = np.logspace(np.log(0.5), np.log(0.01), 10, base=np.exp(1))
+glm = GLM(distr='poissonexp', alpha=0.2, learning_rate=1e-3, verbose=False)
+
+glm.fit(X_train, y_train)
+
+y_pred_glm = glm[-1].predict(X_test)
+
+r2_score_glm = glm[-1].score(y_test, y_pred_glm, np.mean(y_train), method='pseudo_R2')
+# r2_score_glm = r2_score(y_test, y_pred_glm)
+print("r^2 on test data using pyglmnet : %f" % r2_score_glm)
+
 
 ########################################################
 # Plot ...
@@ -49,6 +59,7 @@ glm = GLM(distr='poisson', alpha=alpha, reg_lambda=reg_lambda, learning_rate=l_r
 plt.plot(y_test, label='tr')
 plt.plot(y_pred_enet, 'r', label='sklearn-pr')
 # Add the result for GLM
+plt.plot(y_pred_glm, 'g', label='glm-pr')
 plt.xlabel('')
 plt.ylabel('')
 plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=1,
