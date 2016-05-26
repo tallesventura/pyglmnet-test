@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import time
 import scipy.sparse as sps
 import matplotlib.pyplot as plt
 from sklearn.cross_validation import train_test_split
@@ -32,7 +33,7 @@ n_samples = X.shape[0]
 
 
 #Splitting the training and test sets
-X_train, X_test, y_train, y_test = train_test_split(X,y,train_size=0.5,random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X,y,train_size=0.5,test_size = 0.5, random_state=0)
 
 # Defining the model
 model = GLM(distr='poisson', verbose=False, alpha=0.052, learning_rate=1e-3)
@@ -50,8 +51,12 @@ print 'learning rate: ', model.learning_rate
 
 #model.threshold = 1e-5
 
+
 scaler = StandardScaler().fit(X_train)
+t_before = time.clock()
 model.fit(scaler.transform(X_train),y_train)
+t_after = time.clock()
+print 'fit runtime in seconds: ', t_after-t_before
 
 # Fitting the model
 #model.fit(X_train,y_train)
