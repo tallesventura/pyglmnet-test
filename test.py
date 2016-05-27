@@ -46,7 +46,10 @@ n_samples = X.shape[0]
 X_train, X_test, y_train, y_test = train_test_split(X,y,train_size=0.5,test_size = 0.5, random_state=0)
 
 # Defining the model
-model = GLM(distr='poisson', verbose=False, alpha=0.052, learning_rate=1e-3)
+reg_lambda = np.logspace(np.log(2.0), np.log(0.01), 100, base=np.exp(1))
+model = GLM(distr='poisson', verbose=False, alpha=0.05,
+           max_iter=1000, learning_rate=0.001,
+           reg_lambda=reg_lambda, eta=10.0)
 # Best values for the parameters for R2s:
 # R2r:	0.714862
 # 	alpha: 			0.052
@@ -62,14 +65,14 @@ print 'learning rate: ', model.learning_rate
 #model.threshold = 1e-5
 
 
-scaler = StandardScaler().fit(X_train)
+# Fitting the model
+#scaler = StandardScaler().fit(X_train)
 t_before = time.clock()
-model.fit(scaler.transform(X_train),y_train)
+model.fit(X_train,y_train)
+#model.fit(scaler.transform(X_train),y_train)
 t_after = time.clock()
 print 'fit runtime in seconds: ', t_after-t_before
 
-# Fitting the model
-#model.fit(X_train,y_train)
 
 
 # Making the predictions base on fit model
@@ -77,8 +80,10 @@ if(model.distr == 'multinomial'):
 	yt_predicted = model[-1].predict(X_test).argmax(axis=1)
 	yr_predicted = model[-1].predict(X_train).argmax(axis=1)
 else:
-	yt_predicted = model[-1].predict(scaler.transform(X_test))
-	yr_predicted = model[-1].predict(scaler.transform(X_train))
+	#yt_predicted = model[-1].predict(scaler.transform(X_test))
+	#yr_predicted = model[-1].predict(scaler.transform(X_train))
+	yt_predicted = model[-1].predict(X_test)
+	yr_predicted = model[-1].predict(X_train)
 
 
 # Can we use this??
