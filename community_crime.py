@@ -76,10 +76,15 @@ print("mean square error on test data using sklearn : %f" % mean_square_score_en
 
 ########################################################
 
+#Sorting the predicted values
+y_pred_glm = sorted(y_pred_glm,reverse=True)
+y_pred_enet = sorted(y_pred_enet,reverse=True)
+y_test = sorted(y_test,reverse=True)
+
 #plotting the predictions
-plt.plot(y_test, label='real testing values')
-plt.plot(y_pred_enet, 'r', label='scikit prediction')
-plt.plot(y_pred_glm, 'g', label='pyglmnet prediction')
+plt.plot(y_test[:200], label='real testing values')
+plt.plot(y_pred_enet[:200], 'r', label='scikit prediction')
+plt.plot(y_pred_glm[:200], 'g', label='pyglmnet prediction')
 plt.xlabel('sample')
 plt.ylabel('predicted value')
 plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=1,
